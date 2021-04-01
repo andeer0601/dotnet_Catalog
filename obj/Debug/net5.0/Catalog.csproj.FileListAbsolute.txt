@@ -39,3 +39,6 @@ F:\Anderson\Programação\dotnet\projects\Catalog\bin\Debug\net5.0\runtimes\win\
 F:\Anderson\Programação\dotnet\projects\Catalog\bin\Debug\net5.0\runtimes\linux\native\libmongocrypt.so
 F:\Anderson\Programação\dotnet\projects\Catalog\bin\Debug\net5.0\runtimes\osx\native\libmongocrypt.dylib
 F:\Anderson\Programação\dotnet\projects\Catalog\bin\Debug\net5.0\runtimes\win\native\mongocrypt.dll
+F:\Anderson\Programação\dotnet\projects\Catalog\bin\Debug\net5.0\HealthChecks.MongoDb.dll
+F:\Anderson\Programação\dotnet\projects\Catalog\bin\Debug\net5.0\Microsoft.Extensions.Diagnostics.HealthChecks.dll
+F:\Anderson\Programação\dotnet\projects\Catalog\bin\Debug\net5.0\Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll

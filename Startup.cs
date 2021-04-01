@@ -1,17 +1,16 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Net.Mime;
+using System.Text.Json;
 using Catalog.Repositories;
 using Catalog.Settings;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
@@ -35,11 +34,11 @@ namespace Catalog
 
             BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
             BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
+            var mongoDbSettings = Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
 
             services.AddSingleton<IMongoClient>(ServiceProvider => 
             {
-                var settings = Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
-                return new MongoClient(settings.ConnectionString);
+                return new MongoClient(mongoDbSettings.ConnectionString);
             });
 
             services.AddSingleton<IItemsRepository, MongoDbItemsRepository>();
@@ -51,6 +50,14 @@ namespace Catalog
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Catalog", Version = "v1" });
             });
+
+            services.AddHealthChecks()
+                .AddMongoDb(
+                    mongoDbSettings.ConnectionString, 
+                    name: "MongoDb", 
+                    timeout: TimeSpan.FromSeconds(3),
+                    tags: new[] { "ready" }
+                );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,6 +79,29 @@ namespace Catalog
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                
+                endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions{
+                    Predicate = (check) => check.Tags.Contains("ready"),
+                    ResponseWriter = async(context, report) => {
+                        var result = JsonSerializer.Serialize(
+                            new{
+                                Status = report.Status.ToString(),
+                                HealthCheckServiceCollectionExtensions= report.Entries.Select(entry => new { 
+                                    Name = entry.Key, 
+                                    Status = entry.Value.Status.ToString(),
+                                    Exception = entry.Value.Exception != null ? entry.Value.Exception.Message : "none",
+                                    Duration = entry.Value.Duration.ToString()
+                                })
+                            }
+                        );
+
+                        context.Response.ContentType = MediaTypeNames.Application.Json;
+                        await context.Response.WriteAsync(result);
+                    }
+                });
+                endpoints.MapHealthChecks("/health/live", new HealthCheckOptions{
+                    Predicate = (_) => false
+                });
             });
         }
     }
