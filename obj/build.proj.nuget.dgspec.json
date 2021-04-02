@@ -1,0 +1,51 @@
+{
+  "format": 1,
+  "restore": {
+    "F:\\Anderson\\Programação\\dotnet\\projects\\Catalog\\build.proj": {}
+  },
+  "projects": {
+    "F:\\Anderson\\Programação\\dotnet\\projects\\Catalog\\build.proj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "F:\\Anderson\\Programação\\dotnet\\projects\\Catalog\\build.proj",
+        "projectName": "build",
+        "projectPath": "F:\\Anderson\\Programação\\dotnet\\projects\\Catalog\\build.proj",
+        "packagesPath": "C:\\Users\\ander\\.nuget\\packages\\",
+        "outputPath": "F:\\Anderson\\Programação\\dotnet\\projects\\Catalog\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "F:\\Anderson\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net45"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net45": {
+            "targetAlias": "net45",
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net45": {
+          "targetAlias": "net45",
+          "dependencies": {
+            "Microsoft.NETFramework.ReferenceAssemblies": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.0, )",
+              "autoReferenced": true
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
